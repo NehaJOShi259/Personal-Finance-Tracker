@@ -10,10 +10,29 @@ if os.path.exists(DATA_FILE):
 else:
     df = pd.DataFrame(columns=["Type", "Category", "Amount", "Description", "Date"])
 
+st.set_page_config(page_title="Personal Finance Tracker", layout="wide")
+
 st.title("Personal Finance Tracker Dashboard")
 
-income_categories = ["Salary", "Bonus", "Investment", "Other"]
-expense_categories = ["Food", "Transport", "Bills", "Entertainment", "Shopping", "Rent", "Other"]
+income_categories = [
+    "Salary",
+    "Bonus",
+    "Freelancing",
+    "Investment Returns",
+    "Other"
+]
+
+expense_categories = [
+    "Food",
+    "Transport",
+    "Bills",
+    "Entertainment",
+    "Shopping",
+    "Rent",
+    "Investment",
+    "Healthcare",
+    "Other"
+]
 
 st.subheader("Add Transaction")
 
@@ -25,21 +44,51 @@ else:
     category = st.selectbox("Category", expense_categories)
 
 amount = st.number_input("Amount (₹)", min_value=0.0, format="%.2f")
+
 description = st.text_input("Description")
+
 date = st.date_input("Date")
 
-income_words = ["salary", "bonus", "pay", "investment", "profit", "interest", "income"]
-expense_words = ["food", "bill", "travel", "transport", "rent", "shopping", "grocery", "movie", "fun"]
+income_words = [
+    "salary",
+    "bonus",
+    "pay",
+    "profit",
+    "interest",
+    "income",
+    "return",
+    "freelance"
+]
+
+expense_words = [
+    "food",
+    "bill",
+    "travel",
+    "transport",
+    "rent",
+    "shopping",
+    "grocery",
+    "movie",
+    "fun",
+    "investment",
+    "sip",
+    "stock",
+    "mutual fund",
+    "medical"
+]
 
 def detect_mismatch(transaction_type, description):
+
     text = description.lower()
 
     if transaction_type == "Income":
+
         for word in expense_words:
             if word in text:
                 return word
 
     elif transaction_type == "Expense":
+
         for word in income_words:
             if word in text:
                 return word
@@ -51,19 +100,27 @@ if st.button("Add Transaction"):
     mismatch_word = detect_mismatch(transaction_type, description)
 
     total_income = df[df["Type"] == "Income"]["Amount"].sum()
+
     total_expense = df[df["Type"] == "Expense"]["Amount"].sum()
+
     remaining_balance = total_income - total_expense
 
     if amount <= 0:
+
         st.error("Amount must be greater than zero.")
 
     elif mismatch_word:
-        st.error(f"The word '{mismatch_word}' does not match with {transaction_type}.")
+
+        st.error(
+            f"The word '{mismatch_word}' does not match with {transaction_type}."
+        )
 
     elif transaction_type == "Expense" and remaining_balance < amount:
+
         st.error("Insufficient balance.")
 
     else:
+
         new_entry = pd.DataFrame({
             "Type": [transaction_type],
             "Category": [category],
@@ -73,21 +130,31 @@ if st.button("Add Transaction"):
         })
 
         df = pd.concat([df, new_entry], ignore_index=True)
+
         df.to_csv(DATA_FILE, index=False)
 
         st.success("Transaction added successfully.")
 
 st.subheader("Transaction History")
 
-st.dataframe(df)
+st.dataframe(df, use_container_width=True)
 
 total_income = df[df["Type"] == "Income"]["Amount"].sum()
+
 total_expense = df[df["Type"] == "Expense"]["Amount"].sum()
+
 balance = total_income - total_expense
 
-st.markdown(f"### Total Income: ₹{total_income:.2f}")
-st.markdown(f"### Total Expenses: ₹{total_expense:.2f}")
-st.markdown(f"### Remaining Balance: ₹{balance:.2f}")
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("Total Income", f"₹{total_income:.2f}")
+
+with col2:
+    st.metric("Total Expenses", f"₹{total_expense:.2f}")
+
+with col3:
+    st.metric("Remaining Balance", f"₹{balance:.2f}")
 
 st.subheader("Delete or Clear Data")
 
@@ -98,24 +165,34 @@ delete_index = st.number_input(
     format="%d"
 )
 
-if st.button("Delete Entry"):
+col4, col5 = st.columns(2)
 
-    if 0 <= delete_index < len(df):
+with col4:
 
-        df = df.drop(delete_index).reset_index(drop=True)
+    if st.button("Delete Entry"):
+
+        if 0 <= delete_index < len(df):
+
+            df = df.drop(delete_index).reset_index(drop=True)
+
+            df.to_csv(DATA_FILE, index=False)
+
+            st.success("Entry deleted.")
+
+        else:
+            st.error("Invalid row number.")
+
+with col5:
+
+    if st.button("Clear All Data"):
+
+        df = pd.DataFrame(
+            columns=["Type", "Category", "Amount", "Description", "Date"]
+        )
+
         df.to_csv(DATA_FILE, index=False)
 
-        st.success("Entry deleted.")
-
-    else:
-        st.error("Invalid row number.")
-
-if st.button("Clear All Data"):
-
-    df = pd.DataFrame(columns=["Type", "Category", "Amount", "Description", "Date"])
-    df.to_csv(DATA_FILE, index=False)
-
-    st.success("All data cleared.")
+        st.success("All data cleared.")
 
 st.subheader("Expense Breakdown by Category")
 
@@ -132,7 +209,7 @@ if not df.empty:
         ax1.pie(
             category_sum,
             labels=category_sum.index,
-            autopct=lambda p: f"{p:.1f}%" if p > 0 else "",
+            autopct=lambda p: f"{p:.1f}%",
             startangle=90
         )
 
@@ -163,8 +240,10 @@ if not df.empty:
         color=["green", "red"]
     )
 
-    plt.title("Income vs Expense")
+    plt.title("Income vs Expense Comparison")
+
     plt.xlabel("Type")
+
     plt.ylabel("Amount (₹)")
 
     for i, val in enumerate(summary):
@@ -201,7 +280,7 @@ if not df.empty:
         (monthly_summary["Savings"] / monthly_summary["Income"]) * 100
     ).fillna(0)
 
-    st.dataframe(monthly_summary)
+    st.dataframe(monthly_summary, use_container_width=True)
 
     st.subheader("Monthly Expense Trend")
 
@@ -216,24 +295,24 @@ if not df.empty:
     plt.xticks(rotation=45)
 
     plt.xlabel("Month")
+
     plt.ylabel("Expense Amount (₹)")
+
     plt.title("Monthly Expense Trend")
 
     st.pyplot(fig3)
 
     avg_savings = monthly_summary["Savings %"].mean()
 
-    st.markdown(
-        f"### Average Savings Percentage: {avg_savings:.2f}%"
-    )
+    st.metric("Average Savings Percentage", f"{avg_savings:.2f}%")
 
-    csv = df.to_csv(index=False).encode('utf-8')
+    csv = df.to_csv(index=False).encode("utf-8")
 
     st.download_button(
         label="Download Financial Report",
         data=csv,
-        file_name='finance_report.csv',
-        mime='text/csv'
+        file_name="finance_report.csv",
+        mime="text/csv"
     )
 
 else:
