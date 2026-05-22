@@ -3,14 +3,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
+st.set_page_config(page_title="Personal Finance Tracker", layout="wide")
+
 DATA_FILE = "finance_data.csv"
 
 if os.path.exists(DATA_FILE):
     df = pd.read_csv(DATA_FILE)
 else:
     df = pd.DataFrame(columns=["Type", "Category", "Amount", "Description", "Date"])
-
-st.set_page_config(page_title="Personal Finance Tracker", layout="wide")
 
 st.title("Personal Finance Tracker Dashboard")
 
@@ -204,7 +204,7 @@ if not df.empty:
 
         category_sum = expense_df.groupby("Category")["Amount"].sum()
 
-        fig1, ax1 = plt.subplots()
+        fig1, ax1 = plt.subplots(figsize=(4, 4))
 
         ax1.pie(
             category_sum,
@@ -213,9 +213,9 @@ if not df.empty:
             startangle=90
         )
 
-        plt.title("Expense Distribution (%)")
+        plt.title("Expense Distribution (%)", fontsize=10)
 
-        st.pyplot(fig1)
+        st.pyplot(fig1, use_container_width=False)
 
     else:
         st.info("No expense data available.")
@@ -232,7 +232,7 @@ if not df.empty:
         fill_value=0
     )
 
-    fig2, ax2 = plt.subplots()
+    fig2, ax2 = plt.subplots(figsize=(4, 3))
 
     summary.plot(
         kind="bar",
@@ -240,16 +240,18 @@ if not df.empty:
         color=["green", "red"]
     )
 
-    plt.title("Income vs Expense Comparison")
+    plt.title("Income vs Expense", fontsize=10)
 
-    plt.xlabel("Type")
+    plt.xlabel("Type", fontsize=8)
 
-    plt.ylabel("Amount (₹)")
+    plt.ylabel("Amount (₹)", fontsize=8)
+
+    plt.xticks(rotation=0, fontsize=8)
 
     for i, val in enumerate(summary):
-        ax2.text(i, val + 5, f"{val:.0f}", ha='center')
+        ax2.text(i, val + 5, f"{val:.0f}", ha='center', fontsize=8)
 
-    st.pyplot(fig2)
+    st.pyplot(fig2, use_container_width=False)
 
 else:
     st.info("No data available.")
@@ -284,7 +286,7 @@ if not df.empty:
 
     st.subheader("Monthly Expense Trend")
 
-    fig3, ax3 = plt.subplots()
+    fig3, ax3 = plt.subplots(figsize=(5, 3))
 
     ax3.plot(
         monthly_summary.index,
@@ -292,15 +294,15 @@ if not df.empty:
         marker='o'
     )
 
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=45, fontsize=8)
 
-    plt.xlabel("Month")
+    plt.xlabel("Month", fontsize=8)
 
-    plt.ylabel("Expense Amount (₹)")
+    plt.ylabel("Expense (₹)", fontsize=8)
 
-    plt.title("Monthly Expense Trend")
+    plt.title("Monthly Expense Trend", fontsize=10)
 
-    st.pyplot(fig3)
+    st.pyplot(fig3, use_container_width=False)
 
     avg_savings = monthly_summary["Savings %"].mean()
 
