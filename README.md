@@ -1,90 +1,66 @@
-# Personal Finance Tracker (Python Streamlit)
+# Personal Finance Tracker Dashboard
 
-**Personal Finance Tracker** is a simple yet functional web app built using **Python** and **Streamlit**.
-It helps you record, visualize, and manage your **income and expenses** effectively — all through an interactive web dashboard.
-
-
-
-## 🌐 Live Demo
-
-👉 [Open Personal Finance Tracker](https://nehajoshi259-personal-finance-dashboar-finance-dashboard-u2wtzy.streamlit.app/)
-
-
+Personal Finance Tracker Dashboard is an interactive web application built using Python and Streamlit that helps users manage income and expenses efficiently through data visualization and analytics.
 
 ## Features
 
-* Add transactions with **Date, Type (Income/Expense), Category, Amount, and Description**
-* Prevent mismatched entries (e.g., “food” under salary)
-* Stop spending if your balance is insufficient
-* Automatically calculate:
+- Add Income and Expense transactions
+- Categorize transactions using predefined categories
+- Automatic balance calculation
+- Prevent overspending based on available balance
+- Detect mismatched transaction descriptions
+- View complete transaction history
+- Delete individual transactions
+- Clear all stored records
+- Download financial report as CSV
+- Monthly financial insights and savings analysis
+- Interactive dashboard visualizations
 
-  * **Total Income**
-  * **Total Expenses**
-  * **Remaining Balance**
-* View and manage all transactions in one place
-* Delete individual entries or clear all data
-* Visualize:
+## Visualizations Included
 
-  * **Category-wise Expense Distribution (Pie Chart)**
-  * **Income vs Expense Comparison (Bar Chart)**
-* All data is saved locally in a **CSV file** for persistence
-
-
+- Expense Distribution Pie Chart
+- Income vs Expense Bar Chart
+- Monthly Expense Trend Line Chart
+- Savings Percentage Analysis
 
 ## Technologies Used
 
-* **Python 3.x**
-* **Streamlit**
-* **Pandas**
-* **Matplotlib**
+- Python
+- Streamlit
+- Pandas
+- Matplotlib
 
+## Project Workflow
 
+1. User enters transaction details
+2. Input validation is performed
+3. Transactions are stored in CSV format
+4. Financial analysis is generated
+5. Interactive charts and insights are displayed
 
-## How to Run Locally
+## How to Run the Project
 
-1. Clone the repository:
+### Clone Repository
 
-   ```bash
-   git clone https://github.com/NehaJOShi259/Personal-Finance-Dashboard-.git
-   cd Personal-Finance-Dashboard-
-   ```
+```bash
+git clone https://github.com/NehaJOShi259/Personal-Finance-Tracker.git
+cd Personal-Finance-Tracker
+Install Dependencies
+pip install -r requirements.txt
+Run the Application
+streamlit run finance_dashboard.py
+Example Functionalities
+Track monthly spending habits
+Compare income and expenses
+Analyze category-wise expenses
+Monitor savings trends
+Export financial reports
+Future Improvements
+Database integration
+User authentication system
+Advanced filtering options
+Cloud deployment
+Budget prediction using machine learning
+Application Overview
 
-2. Install dependencies:
-
-   ```bash
-   python -m pip install -r requirements.txt
-   ```
-
-3. Run the app:
-
-   ```bash
-   python -m streamlit run finance_dashboard.py
-   ```
-
-4. Open the link shown in your terminal (usually):
-
-   ```
-   http://localhost:8501
-   ```
-
-
-
-## App Logic Overview
-
-* **Income Validation:** Prevents adding expenses before income.
-* **Description Validation:** Detects mismatched words (e.g., “food” under income).
-* **Balance Check:** Stops you from overspending beyond your current balance.
-* **Visual Insights:**
-
-  * Pie chart for category-wise spending distribution.
-  * Bar chart comparing total income vs expenses.
-
-
-
-## Example Usage
-
-1. Add your **Salary** as income.
-2. Record expenses like **Food**, **Bills**, or **Shopping**.
-3. The app prevents overspending and mismatched entries.
-4. View total balance, category spending, and bar/pie charts.
-5. Manage entries easily with delete and clear options.
+The application allows users to maintain financial records in a simple and interactive dashboard environment. It combines transaction management, analytics, and visualization features to help users understand spending patterns and financial behavior more effectively.
